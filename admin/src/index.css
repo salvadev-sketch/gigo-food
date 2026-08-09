@@ -1,0 +1,97 @@
+:root{
+  --forest:#1B4332;
+  --forest-deep:#0E2B1F;
+  --amber:#F4A430;
+  --amber-deep:#D6870F;
+  --cream:#FBF7EE;
+  --paper:#FFFFFF;
+  --line:#E7E0CF;
+  --ink:#22301F;
+  --muted:#7A7A6A;
+  --danger:#C0392B;
+  --success:#1F7A4C;
+  --radius:12px;
+}
+*{box-sizing:border-box;}
+body{margin:0; background:var(--cream); color:var(--ink); font-family:'Manrope',sans-serif; -webkit-font-smoothing:antialiased;}
+h1,h2,h3{font-family:'Fraunces',serif; font-weight:700; letter-spacing:-0.01em; color:var(--forest-deep); margin:0;}
+img{max-width:100%; display:block;}
+button{font-family:inherit; cursor:pointer;}
+select,textarea,input{font-family:inherit;}
+
+/* ---------- Shell layout ---------- */
+.admin-shell{min-height:100vh;}
+.admin-body{display:flex; align-items:flex-start;}
+.admin-main{flex:1; padding:32px 36px; max-width:900px;}
+
+/* ---------- Topbar ---------- */
+.admin-topbar{position:sticky; top:0; z-index:50; background:var(--paper); border-bottom:1px solid var(--line); padding:14px 28px; display:flex; align-items:center; justify-content:space-between;}
+.admin-brand{display:flex; align-items:center; gap:10px; font-family:'Fraunces',serif; font-weight:700; font-size:20px; color:var(--forest-deep);}
+.admin-brand img{width:32px; height:32px; border-radius:8px;}
+.admin-brand em{color:var(--amber-deep); font-style:normal;}
+.admin-topbar-actions{display:flex; align-items:center; gap:14px;}
+.admin-avatar{width:34px; height:34px; border-radius:50%; object-fit:cover;}
+.admin-logout{background:none; border:1px solid var(--line); color:var(--ink); padding:8px 16px; border-radius:20px; font-size:13px; font-weight:700;}
+.admin-logout:hover{border-color:var(--danger); color:var(--danger);}
+
+/* ---------- Sidebar ---------- */
+.admin-sidebar{width:220px; min-height:calc(100vh - 65px); background:var(--paper); border-right:1px solid var(--line); padding:24px 0; flex-shrink:0;}
+.sidebar-link{display:flex; align-items:center; gap:12px; padding:13px 28px; font-size:14px; font-weight:600; color:var(--muted); border-left:3px solid transparent;}
+.sidebar-link img{width:18px; height:18px; opacity:.7;}
+.sidebar-link:hover{background:var(--cream); color:var(--ink);}
+.sidebar-link.active{border-left-color:var(--amber); background:var(--cream); color:var(--forest-deep);}
+.sidebar-link.active img{opacity:1;}
+
+/* ---------- Shared form / field styles ---------- */
+.page-title{font-size:26px; margin-bottom:22px;}
+.field{margin-bottom:16px;}
+.field label{display:block; font-size:12px; font-weight:700; color:var(--forest-deep); margin-bottom:6px;}
+.field input,.field textarea,.field select{width:100%; border:1px solid var(--line); border-radius:8px; padding:11px 12px; font-size:14px; background:var(--paper);}
+.field textarea{resize:vertical;}
+.form-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.primary-btn{background:var(--amber); color:var(--forest-deep); border:none; padding:13px 26px; border-radius:24px; font-weight:800; font-size:14px;}
+.primary-btn:disabled{opacity:.5; cursor:not-allowed;}
+.error-text{color:var(--danger); font-size:13px; margin:6px 0;}
+.success-text{color:var(--success); font-size:13px; margin:6px 0;}
+.empty-note{color:var(--muted); font-size:14px; padding:20px 0;}
+
+/* ---------- Add item form ---------- */
+.add-form{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:26px; max-width:480px;}
+.upload-box{display:block; width:130px; height:130px; border:2px dashed var(--line); border-radius:var(--radius); overflow:hidden; cursor:pointer; background:var(--cream);}
+.upload-box img{width:100%; height:100%; object-fit:cover;}
+.add-submit{width:100%; margin-top:6px;}
+
+/* ---------- List table (shared shape with customer cart table) ---------- */
+.cart-table{width:100%; border-collapse:collapse; background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;}
+.cart-table th{text-align:left; font-size:12px; color:var(--muted); text-transform:uppercase; padding:12px 14px; border-bottom:1px solid var(--line);}
+.cart-table td{padding:12px 14px; border-bottom:1px solid var(--line); font-size:14px; vertical-align:middle;}
+.cart-food-icon{width:44px; height:44px; border-radius:8px; overflow:hidden;}
+.cart-food-icon img{width:100%; height:100%; object-fit:cover;}
+.remove-x{background:none; border:none; color:var(--danger); font-weight:800; font-size:16px;}
+
+/* ---------- Orders ---------- */
+.order-card{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:18px 20px; display:flex; align-items:center; gap:18px; margin-bottom:14px; flex-wrap:wrap;}
+.order-icon{width:34px; height:34px; flex-shrink:0;}
+.order-card .info{flex:1; min-width:240px;}
+.order-items{font-weight:700; font-size:14px; margin:0 0 6px;}
+.order-address{font-size:12.5px; color:var(--muted); margin:0 0 6px;}
+.order-meta{font-size:12.5px; color:var(--muted); margin:0;}
+.status-select{border:1px solid var(--line); border-radius:8px; padding:9px 12px; font-size:13px; font-weight:700; background:var(--cream); color:var(--forest-deep);}
+
+/* ---------- Login ---------- */
+.admin-login-wrap{min-height:100vh; display:flex; align-items:center; justify-content:center; background:var(--cream); padding:20px;}
+.admin-login-card{background:var(--paper); border:1px solid var(--line); border-radius:16px; padding:38px; width:100%; max-width:360px; text-align:center;}
+.admin-login-logo{width:48px; height:48px; margin:0 auto 14px; border-radius:12px;}
+.admin-login-card h2{font-size:22px;}
+.admin-login-sub{color:var(--muted); font-size:13px; margin:6px 0 22px;}
+.admin-login-card .field{text-align:left;}
+.admin-login-card .primary-btn{width:100%; margin-top:6px;}
+
+@media(max-width:760px){
+  .admin-body{flex-direction:column;}
+  .admin-sidebar{width:100%; min-height:auto; display:flex; padding:8px 0; overflow-x:auto;}
+  .sidebar-link{border-left:none; border-bottom:3px solid transparent; padding:10px 18px; white-space:nowrap;}
+  .sidebar-link.active{border-left-color:transparent; border-bottom-color:var(--amber);}
+  .admin-main{padding:20px;}
+  .form-grid{grid-template-columns:1fr;}
+}
