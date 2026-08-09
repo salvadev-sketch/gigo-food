@@ -53,17 +53,20 @@ Paste this whole file (or link the repo) into a fresh conversation to resume exa
   - Admin panel (toggle button bottom-right): Add Items form, List Items table, Orders list with status-update dropdown (live-syncs to customer My Orders in the mock)
 - **Pushed to GitHub**: `index.html` + `README.md` on `main` branch. Push verified via raw.githubusercontent.com fetch.
 
-### 🔲 Phase 2 — Backend Scaffold (IN PROGRESS, NOT PUSHED)
-Local-only so far (`backend/package.json`, `backend/.env.example` created), not committed to repo yet.
-Still to build:
-- `backend/models/`: `Food.js`, `User.js`, `Order.js`
-- `backend/routes/`: `foodRoute.js` (list/add/remove + image upload via multer), `userRoute.js` (register/login, JWT), `cartRoute.js`, `orderRoute.js` (place order, user's orders, admin list/update status)
-- `backend/routes/momoRoute.js` — MTN MoMo Collections API integration (request-to-pay, callback handler)
-- `backend/middleware/auth.js` — JWT verify middleware (customer + admin role check)
-- `backend/server.js` — Express app entry, mongoose connect (must be awaited before `app.listen`, per recurring gotcha #7)
-- Seed script using the 32-food dataset extracted from the tutorial's `assets.js`
+### ✅ Phase 2 — Backend Scaffold (DONE, PUSHED)
+All files under 300 lines each (project convention — split into a new file rather than growing past that).
+- `backend/models/`: `Food.js`, `User.js` (with resetPasswordToken/Expires + cartData), `Order.js` (items, address, MoMo payment sub-doc)
+- `backend/middleware/`: `auth.js` (`requireAuth` JWT verify + `requireAdmin` role check), `upload.js` (multer disk storage)
+- `backend/config/`: `db.js` (awaited mongoose connect, per gotcha #7), `email.js` (nodemailer, matches gigo-pharmacy/gigo-delivery pattern — logs instead of sending if EMAIL_* unset), `momo.js` (MTN MoMo Collections API client: `getAccessToken`, `requestToPay`, `checkPaymentStatus`)
+- `backend/routes/`: `foodRoute.js` (list/add/remove), `userRoute.js` (register/login, bcrypt+JWT), `passwordRoute.js` (forgot/reset), `cartRoute.js` (add/remove/get, cart stored on User doc), `orderRoute.js` (place order → triggers MoMo push, status polling, user's orders, admin list + update-status)
+- `backend/server.js` — Express entry, CORS scoped to FRONTEND_URL/ADMIN_URL, static `/uploads`, DB connect awaited before `app.listen`
+- `backend/seed/seedFoods.js` — real 32-item dataset extracted from the tutorial's `assets.js` (names/categories/images preserved, prices converted $ → FRw at a placeholder 1:1000 rate — **adjust the `RATE` constant to a real exchange rate before using**)
+- Verified: every route/model/middleware file syntax-checked (`node --check`) AND actually imported (`import()`) successfully before pushing — catches missing-dependency errors that `--check` alone would miss
+- `multer` pinned to `^2.0.0` (1.x has known vulnerabilities)
 
-**⚠️ MTN MoMo needs real credentials before payments will work**: Subscription Key, API User, API Key from the [MTN MoMo Developer Portal](https://momodeveloper.mtn.com). Start in `sandbox`, switch to `production` once approved. Env vars already stubbed in `backend/.env.example`.
+**⚠️ MTN MoMo needs real credentials before payments will actually work**: Subscription Key, API User, API Key from the [MTN MoMo Developer Portal](https://momodeveloper.mtn.com). Start in `sandbox` (note: sandbox only accepts `EUR` as currency, already handled in `momo.js`), switch to `production`/`RWF` once approved. Env vars stubbed in `backend/.env.example`.
+
+**⚠️ Not yet run**: `npm install` + `seedFoods.js` against the real Atlas cluster — needs the real `MONGO_URI` password. `backend/uploads/` in the repo only has a `.gitkeep`; the 32 seed images live in `frontend/src/assets/` — copy them into `backend/uploads/` locally before running the seed script (or point the seed script at the frontend assets path instead).
 
 ### 🔲 Phase 3 — Customer Frontend (React/Vite) — NOT STARTED
 Convert the prototype's HTML/CSS/JS into real React components hitting the live backend:
@@ -99,7 +102,8 @@ Convert the prototype's HTML/CSS/JS into real React components hitting the live 
 ---
 
 ## IMMEDIATE NEXT STEPS (pick up here)
-1. Push the unzipped asset folders (`frontend_assets/`, `admin_assets/`) to the repo
-2. Push the backend scaffold started so far (`package.json`, `.env.example`) + continue building models/routes
-3. Get MTN MoMo sandbox credentials from the user (or proceed with COD fallback logic while waiting)
-4. Start converting the prototype into real React components
+1. ~~Push the unzipped asset folders~~ ✅ done
+2. ~~Push the backend scaffold~~ ✅ done — full backend code is live (Phase 2 complete)
+3. Get MTN MoMo sandbox credentials from the user, and a real exchange rate for the seed script's `RATE` constant
+4. Run `npm install` + `seedFoods.js` against the real Atlas cluster (needs real `MONGO_URI` password)
+5. Start converting the prototype into real React components (Phase 3 — customer frontend)
