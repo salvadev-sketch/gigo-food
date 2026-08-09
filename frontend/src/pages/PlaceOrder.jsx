@@ -81,7 +81,7 @@ const PlaceOrder = () => {
             <div className="field"><label>Province</label><input value={address.province} onChange={handleField("province")} required /></div>
             <div className="field full">
               <label>MTN MoMo Number</label>
-              <input value={momoPhone} onChange={(e) => setMomoPhone(e.target.value)} placeholder="+257 79 000 000" required />
+              <input value={momoPhone} onChange={(e) => setMomoPhone(e.target.value)} placeholder="+250 791 112 656" required />
             </div>
           </div>
           <div className="momo-box">
