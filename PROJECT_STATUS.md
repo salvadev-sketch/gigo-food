@@ -68,12 +68,15 @@ All files under 300 lines each (project convention — split into a new file rat
 
 **⚠️ Not yet run**: `npm install` + `seedFoods.js` against the real Atlas cluster — needs the real `MONGO_URI` password. `backend/uploads/` in the repo only has a `.gitkeep`; the 32 seed images live in `frontend/src/assets/` — copy them into `backend/uploads/` locally before running the seed script (or point the seed script at the frontend assets path instead).
 
-### 🔲 Phase 3 — Customer Frontend (React/Vite) — NOT STARTED
-Convert the prototype's HTML/CSS/JS into real React components hitting the live backend:
-- `pages/`: Home, Cart, PlaceOrder (delivery info + MoMo payment), MyOrders
-- `components/`: Navbar, Header/Hero, ExploreMenu (category row), FoodDisplay/FoodItem, AppDownload, Footer, LoginPopup
-- `context/`: StoreContext (cart state, food list, auth token) — matches the tutorial's context pattern
-- Wire real food images from `frontend_assets/` once pushed
+### ✅ Phase 3 — Customer Frontend (React/Vite) (DONE, PUSHED)
+Real React app wired to the live backend routes from Phase 2. All files under 300 lines.
+- `App.jsx` — routes (`/`, `/cart`, `/order`, `/myorders`), navbar, footer, login popup state
+- `context/StoreContext.jsx` — food list fetch, cart (local + synced to `/api/cart/*` when signed in), auth (login/register/logout, JWT in localStorage), cart totals/count helpers, `DELIVERY_FEE` constant (1500 FRw)
+- `pages/`: `Home.jsx`, `Cart.jsx` (qty controls, totals, requires sign-in to checkout), `PlaceOrder.jsx` (delivery form + **real MTN MoMo flow**: POSTs to `/api/order/place`, then polls `/api/order/status/:id` every 4s up to 15 attempts for Successful/Failed), `MyOrders.jsx` (fetches `/api/order/userorders`)
+- `components/`: `Navbar`, `Header` (hero), `ExploreMenu` (8 category filter buttons), `FoodDisplay` + `FoodItem` (add/remove qty, images served from backend `/uploads/:filename`), `AppDownload`, `Footer`, `LoginPopup`
+- `index.css` — single global stylesheet, same design tokens as the prototype (forest/amber/cream, Fraunces/Manrope)
+- **Verified with a real `npx vite build`** (not just eyeballing code) — 160 modules transformed, zero errors. This caught nothing this time, but is now the standing check before every push per the project's build-verification rule.
+- `multer`-style asset serving: food images are expected at `${VITE_API_URL}/uploads/<filename>` — matches how `backend/routes/foodRoute.js` stores the multer filename and `server.js` serves `/uploads` statically.
 
 ### 🔲 Phase 4 — Admin Panel (React/Vite, separate app) — NOT STARTED
 - `pages/`: Add, List, Orders
@@ -104,6 +107,8 @@ Convert the prototype's HTML/CSS/JS into real React components hitting the live 
 ## IMMEDIATE NEXT STEPS (pick up here)
 1. ~~Push the unzipped asset folders~~ ✅ done
 2. ~~Push the backend scaffold~~ ✅ done — full backend code is live (Phase 2 complete)
-3. Get MTN MoMo sandbox credentials from the user, and a real exchange rate for the seed script's `RATE` constant
-4. Run `npm install` + `seedFoods.js` against the real Atlas cluster (needs real `MONGO_URI` password)
-5. Start converting the prototype into real React components (Phase 3 — customer frontend)
+3. ~~Build customer React frontend~~ ✅ done, build-verified (Phase 3 complete)
+4. Get MTN MoMo sandbox credentials from the user, and a real exchange rate for the seed script's `RATE` constant
+5. Run `npm install` + `seedFoods.js` against the real Atlas cluster (needs real `MONGO_URI` password)
+6. Build the admin panel React app (Phase 4) — Add Items / List Items / Orders, reusing `admin/src/assets/`
+7. Deploy: backend → Render, frontend → Vercel (Phase 5)
