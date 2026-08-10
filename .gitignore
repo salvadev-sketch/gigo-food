@@ -2,7 +2,11 @@ gigo-food/backend/node_modules
 gigo-food/frontend/node_modules
 node_modules/
 .env
-backend/uploads/*
-!backend/uploads/.gitkeep
 dist/
 .DS_Store
+
+# Ignore future runtime-uploaded images (admin panel adds), but keep the
+# 32 seed images tracked so `node seed/seedFoods.js` works on every deploy.
+backend/uploads/*
+!backend/uploads/.gitkeep
+!backend/uploads/food_*.png
