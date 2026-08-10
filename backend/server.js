@@ -8,6 +8,7 @@ import userRouter from "./routes/userRoute.js";
 import passwordRouter from "./routes/passwordRoute.js";
 import cartRouter from "./routes/cartRoute.js";
 import orderRouter from "./routes/orderRoute.js";
+import seedRouter from "./routes/seedRoute.js";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use("/api/user", userRouter);
 app.use("/api/password", passwordRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
+app.use("/api/seed", seedRouter);
 
 app.get("/", (req, res) => {
   res.send("GIGO Food API is running");

@@ -66,7 +66,10 @@ All files under 300 lines each (project convention — split into a new file rat
 
 **⚠️ MTN MoMo needs real credentials before payments will actually work**: Subscription Key, API User, API Key from the [MTN MoMo Developer Portal](https://momodeveloper.mtn.com). Start in `sandbox` (note: sandbox only accepts `EUR` as currency, already handled in `momo.js`), switch to `production`/`RWF` once approved. Env vars stubbed in `backend/.env.example`.
 
-**⚠️ Not yet run**: `npm install` + `seedFoods.js` against the real Atlas cluster — needs the real `MONGO_URI` password. `backend/uploads/` in the repo only has a `.gitkeep`; the 32 seed images live in `frontend/src/assets/` — copy them into `backend/uploads/` locally before running the seed script (or point the seed script at the frontend assets path instead).
+**✅ Backend deployed to Render**: `https://gigo-food.onrender.com` — live, MongoDB connected (verified in logs: `[db] MongoDB connected: ...`). The 32 seed images are now committed to `backend/uploads/` in git (no longer gitignored) so they survive every redeploy on Render's ephemeral free-tier filesystem.
+
+**⚠️ Seeding workaround for free tier**: Render's free instance type doesn't support Shell access (confirmed via the "Enable Shell Access" upgrade prompt), so `node seed/seedFoods.js` can't be run interactively. Built a workaround: `GET /api/seed/foods?secret=<SEED_SECRET>` (see `routes/seedRoute.js`) does the same insert, triggered by just visiting the URL in a browser. Requires setting `SEED_SECRET` as an env var on Render first. The CLI script (`seed/seedFoods.js`) still works too, for anyone with a paid instance or running locally against the Atlas cluster directly — both now share the same data via `seed/foodData.js`.
+**Status as of last update: `SEED_SECRET` not yet set on Render, seed route not yet triggered — `/api/food/list` still returns an empty array.**
 
 ### ✅ Phase 3 — Customer Frontend (React/Vite) (DONE, PUSHED)
 Real React app wired to the live backend routes from Phase 2. All files under 300 lines.
