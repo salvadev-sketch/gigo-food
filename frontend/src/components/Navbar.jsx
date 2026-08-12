@@ -17,7 +17,7 @@ const Navbar = ({ onSignInClick }) => {
       </div>
       <nav className="primary">
         <Link to="/" className={location.pathname === "/" ? "active" : ""}>Home</Link>
-        <Link to="/" className={location.pathname === "/" ? "active" : ""}>Menu</Link>
+        <a href="/#explore-menu">Menu</a>
         <Link to="/myorders" className={location.pathname === "/myorders" ? "active" : ""}>My Orders</Link>
       </nav>
       <div className="header-actions">
