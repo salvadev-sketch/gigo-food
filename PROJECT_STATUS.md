@@ -93,11 +93,21 @@ Separate Vite React app in `admin/`, all files under 300 lines.
 - **Verified with a real `npx vite build`** in the exact clone that was pushed — 101 modules transformed, zero errors
 - `VITE_API_URL` env var, same pattern as customer frontend, stubbed in `admin/.env.example`
 
-### 🔲 Phase 5 — Deployment — NOT STARTED
-- Backend → Render (env vars: `MONGO_URI`, `JWT_SECRET`, `MOMO_*`, `FRONTEND_URL`, `ADMIN_URL`)
-- Customer frontend → Vercel (`VITE_API_URL`)
-- Admin panel → Vercel, separate project (`VITE_API_URL`)
-- Apply all "Recurring Gotchas" below during setup
+### ✅ Phase 5 — Deployment (DONE, LIVE)
+- **Backend**: `https://gigo-food.onrender.com` (Render, free tier). MongoDB Atlas connected and verified in logs.
+- **Customer frontend**: `https://gigo-food.vercel.app` (Vercel, Root Directory: `frontend`)
+- **Admin panel**: `https://gigo-food-lqky.vercel.app` (Vercel, separate project, Root Directory: `admin`)
+- 32 foods seeded into the live database (see seeding workaround below)
+- Admin access: no in-app way to create an admin account (register always sets `role: "customer"`) — promoted the first account to `role: "admin"` directly via MongoDB Atlas → Browse Collections → `users`. **TODO**: build a proper admin-creation route (same secret-protected pattern as seeding) instead of manual DB edits.
+
+**Bugs found and fixed during deployment:**
+1. **CORS blocking all API calls** — `FRONTEND_URL`/`ADMIN_URL` env vars on Render had trailing slashes (`https://gigo-food.vercel.app/`) but browsers send `Origin` without one — exact-match CORS check failed silently. Fixed by removing trailing slashes.
+2. **Category icons broken (broken-image icon + alt text only)** — root cause: `assets.js` exports `menu_1`..`menu_8` only inside a separate `menu_list` array, NOT as properties on the `assets` object. `ExploreMenu.jsx` was written to reference `assets.menu_1` etc., which is `undefined` → `<img src={undefined}>`. **Not a build/cache issue** — confirmed by a clean local build reproducing the bug identically. Fixed by rewriting `ExploreMenu.jsx` to consume `menu_list` correctly. Removed an unused `assets` import from `FoodItem.jsx` in the same pass (it correctly builds food image URLs from the backend's `/uploads/` path, unrelated code path, wasn't buggy).
+3. **Silent fetch failures** — `StoreContext.jsx`'s `fetchFoodList().catch(() => {})` swallowed all errors with zero logging, making the empty-menu bug invisible in the console. Fixed to `console.error` on failure. Root cause of one such failure: Render's free tier spins down after ~15 min idle — first request after sleep can fail/timeout, silently, until this fix.
+
+**⚠️ Render free-tier limitation discovered**: Shell access is a paid-only feature (confirmed via Render's "Enable Shell Access" upgrade prompt) — `node seed/seedFoods.js` cannot be run interactively. Workaround already built: `GET /api/seed/foods?secret=<SEED_SECRET>` (see Phase 2 section above). Same limitation will apply to any future one-off scripts on other free-tier Render services — plan for an HTTP-triggered route instead of assuming Shell access.
+
+**Removed**: `gigo-food-STAGES-PHASES.md` — a duplicate status file that had gone stale (treated Stages 2-7 as entirely unstarted, contradicting this file). Its "Open decisions" section was already resolved by the actual build (admin is a separate deployed app; order statuses are Food Processing/Out for Delivery/Delivered/Cancelled; forgot-password is built; no rider role, pickup/delivery via address+phone only). This file (`PROJECT_STATUS.md`) is the single source of truth going forward.
 
 ---
 
@@ -118,7 +128,11 @@ Separate Vite React app in `admin/`, all files under 300 lines.
 1. ~~Push the unzipped asset folders~~ ✅ done
 2. ~~Push the backend scaffold~~ ✅ done — full backend code is live (Phase 2 complete)
 3. ~~Build customer React frontend~~ ✅ done, build-verified (Phase 3 complete)
-4. Get MTN MoMo sandbox credentials from the user, and a real exchange rate for the seed script's `RATE` constant
-5. Run `npm install` + `seedFoods.js` against the real Atlas cluster (needs real `MONGO_URI` password)
-6. ~~Build the admin panel React app~~ ✅ done, build-verified (Phase 4 complete)
-7. Deploy: backend → Render, customer frontend → Vercel, admin panel → Vercel (Phase 5)
+4. ~~Build the admin panel React app~~ ✅ done, build-verified (Phase 4 complete)
+5. ~~Deploy backend, frontend, admin~~ ✅ done — all live (Phase 5 complete)
+6. ~~Seed the live database~~ ✅ done — 32 foods live via the HTTP seed route
+7. ~~Fix CORS, broken category icons, silent fetch errors~~ ✅ done, build-verified
+8. Get real MTN MoMo sandbox credentials from the user — currently checkout will create an order but the actual payment request will fail (logged, not crashing) until this is set
+9. Build a proper admin-creation route instead of manually editing `role` in Atlas
+10. Confirm the real exchange rate for `RATE` in `seed/foodData.js` (currently a placeholder $1→1000 FRw)
+11. End-to-end test: place a real order as a customer, confirm it appears correctly in the admin Orders view and status updates propagate back

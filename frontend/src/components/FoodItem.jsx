@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { StoreContext } from "../context/StoreContext.jsx";
-import { assets } from "../assets/assets.js";
 
 const fmt = (n) => `FRw ${n.toLocaleString()}`;
 

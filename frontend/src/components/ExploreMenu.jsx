@@ -1,15 +1,4 @@
-import { assets } from "../assets/assets.js";
-
-const menuList = [
-  { name: "Salad", image: assets.menu_1 },
-  { name: "Rolls", image: assets.menu_2 },
-  { name: "Deserts", image: assets.menu_3 },
-  { name: "Sandwich", image: assets.menu_4 },
-  { name: "Cake", image: assets.menu_5 },
-  { name: "Pure Veg", image: assets.menu_6 },
-  { name: "Pasta", image: assets.menu_7 },
-  { name: "Noodles", image: assets.menu_8 },
-];
+import { menu_list } from "../assets/assets.js";
 
 const ExploreMenu = ({ category, setCategory }) => {
   return (
@@ -29,16 +18,16 @@ const ExploreMenu = ({ category, setCategory }) => {
           <div className="cat-circle" style={{ fontSize: 30 }}>🍽️</div>
           <span>All</span>
         </button>
-        {menuList.map((item) => (
+        {menu_list.map((item) => (
           <button
-            key={item.name}
-            className={`cat-item ${category === item.name ? "active" : ""}`}
-            onClick={() => setCategory(category === item.name ? "All" : item.name)}
+            key={item.menu_name}
+            className={`cat-item ${category === item.menu_name ? "active" : ""}`}
+            onClick={() => setCategory(category === item.menu_name ? "All" : item.menu_name)}
           >
             <div className="cat-circle">
-              <img src={item.image} alt={item.name} />
+              <img src={item.menu_image} alt={item.menu_name} />
             </div>
-            <span>{item.name}</span>
+            <span>{item.menu_name}</span>
           </button>
         ))}
       </div>
@@ -47,3 +36,4 @@ const ExploreMenu = ({ category, setCategory }) => {
 };
 
 export default ExploreMenu;
+

@@ -89,8 +89,8 @@ export const StoreContextProvider = (props) => {
   };
 
   useEffect(() => {
-    fetchFoodList().catch(() => {});
-    if (token) loadCartFromServer().catch(() => {});
+    fetchFoodList().catch((err) => console.error("[gigo-food] Failed to load menu:", err.message));
+    if (token) loadCartFromServer().catch((err) => console.error("[gigo-food] Failed to load cart:", err.message));
   }, []);
 
   const contextValue = {
